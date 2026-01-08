@@ -13,12 +13,12 @@ Go to hardware and deatch the disk and remove it.
 
 -->convert IMG to qcow2 formate for proxmox to use
 
-$ qemu-img convert -p -f raw -O qcow2 plex_linux.img plex_linux.qcow2
+$ qemu-img convert -p -f raw -O qcow2 u24_linux.img u24_linux.qcow2
 
 
 -->Import the new file into our VM ID 102(example)
 
-$qm importdisk 102 /var/lib/vz/images/plex_linux.qcow2 local
+$qm importdisk 102 /var/lib/vz/images/u24_linux.qcow2 local
 
 -->got VM hardware you will select and edit the unused disk 0(uncheck IP thread and click) Add
 
@@ -26,7 +26,7 @@ $qm importdisk 102 /var/lib/vz/images/plex_linux.qcow2 local
 
 ----------------------------------------------------------------------------------------
 
-sudo dd if=/dev/sda bs=4M status=progress of=/path/to/local/folder/plex_linux.img
+sudo dd if=/dev/sda bs=4M status=progress of=/path/to/local/folder/u24_linux.img
 
 Explanation:
 if=/dev/sda: Input file (the disk you want to copy).
@@ -39,9 +39,9 @@ of=/path/to/local/folder/plex_linux.img: Output file saved to your specified loc
 
 example;- 
 mkdir -p ~/images
-sudo dd if=/dev/sda bs=4M status=progress of=~/images/plex_linux.img
+sudo dd if=/dev/sda bs=4M status=progress of=~/images/u24_linux.img
 
-This will create a complete bit-by-bit copy of /dev/sda as plex_linux.img in the ~/images/ directory on your local machine .
+This will create a complete bit-by-bit copy of /dev/sda as u24_linux.img in the ~/images/ directory on your local machine .
 
 Additional Notes:
 Ensure you have sufficient disk space in the target location.
@@ -49,6 +49,7 @@ Ensure you have sufficient disk space in the target location.
 Run with sudo to avoid permission issues when reading from /dev/sda.
 
 You can monitor progress due to the status=progress option .
+
 
 
 
