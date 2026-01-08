@@ -50,7 +50,6 @@ Run with sudo to avoid permission issues when reading from /dev/sda.
 
 You can monitor progress due to the status=progress option .
 
-Let me know if you'd like to compress the image on-the-fly or split it into chunks.
 
 
 
