@@ -72,4 +72,3 @@ $sudo shutdown -r now
 $sudo mdadm --details /dev/md0 --->check raid status
 $sudo smartctl
 $sudo smartctl -a /dev/sdb | less
-$
