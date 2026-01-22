@@ -1,0 +1,133 @@
+#hostnamectl
+
+---->>>>install MySQL for zabbix<<<<----
+
+#service MySQL status
+#mysql
+#apt install mysql-server
+##service MySQL status -->active(running)
+#mysql
+
+mysql> create database zabbix character set utf8mb4 collate utf8mb4_bin;
+
+mysql> create user zabbix@localhost identified by 'password';
+
+mysql> grant all privileges on zabbix.* to zabbix@localhost;
+
+Note:-Since August 2022, we now need to temporarily enable the log_bin_trust_function_creators option.
+
+mysql> set global log_bin_trust_function_creators = 1;
+
+mysql> quit;
+
+---->>>>Import Zabbix Schemax<<<<----
+
+#zcat /usr/share/zabbix-sql-scripts/mysql/server.sql.gz | mysql --default-character-set=utf8mb4 -uzabbix -p Zabbix
+
+#mysql
+
+mysql> set global log_bin_trust_function_creators = 0;
+mysql> quit;
+
+
+---->>>>Edit Zabbix Server configuration file<<<<----
+
+-->>Now in the Zabbix Server configuration file, find and set the DBPassword property to being the password that you set for your zabbix@localhost user.
+
+
+#nano /etc/zabbix/zabbix_server.conf
+
+DBPassword=password
+
+-->>Do some MySQL checks if you want.
+
+
+#mysql
+
+mysql> show databases;
+
+mysql> use zabbix;
+
+mysql> show tables;
+
+mysql> select * from users;
+
+mysql> quit;
+
+---->>>>Start the Zabbix Server Process<<<<----
+
+-->>Now that MySQL is running, we can start the Zabbix Server process.
+
+#service zabbix-server start
+
+#service zabbix-server status
+
+-->>To ensure that Zabbix Server, Agent and Apache restart in case of reboot, run this command.
+
+#systemctl enable zabbix-server zabbix-agent apache2
+
+
+---->>>>Log in and Configure Zabbix Server Front End<<<<----
+
+We can now visit our new Zabbix Server at,
+
+http://your-server-ip-address/zabbix
+
+Welcome to Zabbix 7.0
+
+Press Next Step a few times and then enter your database password when required.
+
+And then at the end, you will then log into the new completed installation of Zabbix Server using the default credentials of,
+
+Username : Admin
+
+Password : Zabbix
+
+---->>>>Configure SSL for Zabbix Server Front end<<<<----
+create the certificate using options provided by LetsEncrypt. This has the added benefit of being free.
+
+So, we need to SSH onto our Zabbix Server and install Certbot
+-->>Ubuntu 24.04 with Apache<<--
+#snap install --classic certbot
+
+#ln -s /snap/bin/certbot /usr/bin/certbot
+
+#certbot --apache
+-> enter email for alerts
+->Yes for registerwith acme server
+->No for EFF news and support digital freedom
+->type-> zabbix.strandls.com(example)
+->this will deploy certificate to /etc/apache2/sites-available/000-default-le-ssl.conf
+
+---->>>>Firewall Configuration-cloud<<<<----
+ssh TCP 22 ipv4  source->static ip(user your static IP)
+http TCP 80 ipv4
+htpps TCP 443 ipv4
+
+other TCP 10051 ipv4 
+
+---->>Ports<<----
+Apache2frontend PHP scripts=80.443
+Zabbix server= 10051
+Zabbix Agent= 10050
+MySQL= 3306
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
